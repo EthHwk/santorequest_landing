@@ -19,8 +19,9 @@ import {
   Heart,
   ChevronLeft,
   ChevronRight,
+  ArrowUp,
 } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { ContactForm } from "@/components/contact-form"
 import { TypewriterEffect } from "@/components/typewriter-effect"
 import { ParticlesBackground } from "@/components/particles-background"
@@ -28,7 +29,21 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function Home() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
   const aboutSectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const testimonials = [
     {
@@ -66,11 +81,11 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <span className="font-bold text-xl">Santo Request</span>
           </div>
-          <nav className="hidden md:flex gap-6">
+          <nav className="hidden md:flex gap-6" aria-label="Navegación principal">
             <Link
               href="#about"
               className="text-sm font-medium text-muted-foreground hover:text-yellow-400 transition-colors"
@@ -102,11 +117,11 @@ export default function Home() {
               Contacto
             </Link>
           </nav>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <Button
               variant="outline"
-              className="md:hidden border-border text-muted-foreground hover:text-yellow-400 hover:bg-secondary"
+              className="md:hidden border-border text-muted-foreground hover:text-yellow-400 hover:bg-secondary ml-2"
             >
               Menú
             </Button>
@@ -115,9 +130,8 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        {/* Hero Section - Updated with subtle particles */}
+        {/* Hero Section - Updated with second CTA */}
         <section className="relative w-full py-24 md:py-32 lg:py-40 overflow-hidden bg-background dark:bg-gray-950">
-          {/* Partículas animadas sutiles */}
           <ParticlesBackground color="rgba(204, 170, 0, 0.08)" particleCount={100} />
 
           <div className="absolute inset-0 z-0 opacity-20">
@@ -151,9 +165,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col items-center md:items-end">
+              <div className="flex flex-col items-center md:items-end space-y-4">
                 <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black w-full md:w-auto">
                   <a href="#services">Descubre cómo podemos ayudarte</a>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black w-full md:w-auto transition-colors">
+                  <a href="#contact">¡Invocá tu solución!</a>
                 </Button>
               </div>
             </div>
@@ -164,7 +181,7 @@ export default function Home() {
             className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer"
             aria-label="Desplazarse hacia abajo"
           >
-            <ChevronDown className="h-8 w-8 text-yellow-500" />
+            <ChevronDown className="h-8 w-8 text-yellow-500" aria-hidden="true" />
           </button>
         </section>
 
@@ -319,7 +336,7 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="max-w-3xl mx-auto space-y-8">
               <div className="flex items-center justify-center">
-                <Heart className="h-12 w-12 text-yellow-500" />
+                <Heart className="h-12 w-12 text-yellow-500" aria-hidden="true" />
               </div>
               <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-center">
                 Un compromiso con lo que importa
@@ -354,7 +371,7 @@ export default function Home() {
                   className="absolute left-0 md:left-4 z-10 p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                   aria-label="Testimonio anterior"
                 >
-                  <ChevronLeft className="h-6 w-6 text-yellow-400" />
+                  <ChevronLeft className="h-6 w-6 text-yellow-400" aria-hidden="true" />
                 </button>
 
                 <div className="max-w-3xl mx-auto px-10 md:px-16">
@@ -363,7 +380,7 @@ export default function Home() {
                       "{testimonials[currentTestimonial].quote}"
                     </p>
                     <div className="flex flex-col items-center space-y-2">
-                      <div className="w-12 h-12 bg-yellow-500 rounded-full"></div>
+                      <div className="w-12 h-12 bg-yellow-500 rounded-full" aria-hidden="true"></div>
                       <div>
                         <p className="font-medium">{testimonials[currentTestimonial].author}</p>
                         <p className="text-sm text-muted-foreground">{testimonials[currentTestimonial].role}</p>
@@ -377,7 +394,7 @@ export default function Home() {
                   className="absolute right-0 md:right-4 z-10 p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
                   aria-label="Siguiente testimonio"
                 >
-                  <ChevronRight className="h-6 w-6 text-yellow-400" />
+                  <ChevronRight className="h-6 w-6 text-yellow-400" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -395,14 +412,14 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Code className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Fábrica digital</h3>
+                      <Code className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Fábrica digital</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Creamos soluciones únicas como tus ideas, con el código justo para que tu proyecto funcione como
                       necesitas.
                     </p>
@@ -410,12 +427,12 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Layers className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Visión UX</h3>
+                      <Layers className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Visión UX</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Diseñamos interfaces que encantan, fluyen y funcionan. Queremos que tu audiencia disfrute usar tus
                       soluciones.
                     </p>
@@ -423,12 +440,12 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Lightbulb className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Guía tech estratégica</h3>
+                      <Lightbulb className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Guía tech estratégica</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Te acompañamos en la toma de decisiones y trazamos juntos el mapa de ruta más eficiente para tu
                       misión.
                     </p>
@@ -436,12 +453,12 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Shield className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Vigilancia continua</h3>
+                      <Shield className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Vigilancia continua</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Nuestros héroes no desaparecen cuando termina la entrega. Te acompañamos para que todo siga
                       funcionando.
                     </p>
@@ -449,12 +466,12 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <LinkIcon className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Conexión total</h3>
+                      <LinkIcon className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Conexión total</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Unificamos tus sistemas, apps y plataformas para que trabajen en armonía. Reducimos fricciones y
                       multiplicamos impacto.
                     </p>
@@ -462,36 +479,36 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Smartphone className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Presencia en tu bolsillo</h3>
+                      <Smartphone className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Presencia en tu bolsillo</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Tus usuarios están en movimiento. Creamos apps ágiles, intuitivas y con alma para acompañarlos.
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Lock className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Escudo de datos</h3>
+                      <Lock className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Escudo de datos</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       La seguridad no es opcional. Protegemos tu información con barreras invisibles pero invencibles.
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Cloud className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Poder desde la nube</h3>
+                      <Cloud className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Poder desde la nube</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Subí tus datos al cielo (pero bien guardados). Te ayudamos a migrar, escalar y administrar tu
                       infraestructura.
                     </p>
@@ -499,24 +516,24 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Bot className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">IA con propósito</h3>
+                      <Bot className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">IA con propósito</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Usamos IA para que tomes mejores decisiones, llegues más lejos y trabajes más inteligentemente.
                     </p>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <Rocket className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Transformación digital</h3>
+                      <Rocket className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Transformación digital</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Repensamos procesos, diseñamos soluciones y te acompañamos en el salto al mundo digital con
                       sentido.
                     </p>
@@ -524,12 +541,12 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-card border-border hover:border-yellow-500 transition-colors">
-                  <CardContent className="p-6 space-y-4">
+                  <CardContent className="p-4 sm:p-6 space-y-4">
                     <div className="flex items-center space-x-2">
-                      <GraduationCap className="h-6 w-6 text-yellow-500" />
-                      <h3 className="text-xl font-bold">Entrenamiento para la misión</h3>
+                      <GraduationCap className="h-6 w-6 text-yellow-500" aria-hidden="true" />
+                      <h3 className="text-lg sm:text-xl font-bold">Entrenamiento para la misión</h3>
                     </div>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                       Capacitamos a tu equipo en IA, diseño, agilidad y todo lo que haga falta para que te empoderes
                       tecnológicamente.
                     </p>
@@ -560,14 +577,14 @@ export default function Home() {
 
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center" aria-hidden="true">
                         <span className="text-black font-bold">@</span>
                       </div>
                       <p>contacto@santorequest.com</p>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center" aria-hidden="true">
                         <span className="text-black font-bold">T</span>
                       </div>
                       <p>+54 11 5606-2690</p>
@@ -584,6 +601,15 @@ export default function Home() {
         </section>
       </main>
 
+      {/* Back to top button */}
+      <button
+        onClick={scrollToTop}
+        className={`back-to-top ${showBackToTop ? 'visible' : ''} p-3 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg transition-all duration-300`}
+        aria-label="Volver arriba"
+      >
+        <ArrowUp className="h-6 w-6" aria-hidden="true" />
+      </button>
+
       {/* Enhanced Footer with quick links */}
       <footer className="w-full py-12 bg-background dark:bg-black text-foreground border-t border-border">
         <div className="container px-4 md:px-6">
@@ -593,7 +619,7 @@ export default function Home() {
               <p className="text-sm text-muted-foreground">
                 Consultora de tecnología y creatividad AI-First formada por especialistas con superpoderes digitales.
               </p>
-              <p className="text-sm text-muted-foreground">© 2023 Santo Request. Todos los derechos reservados.</p>
+              <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} Santo Request. Todos los derechos reservados.</p>
             </div>
 
             <div className="space-y-4">
@@ -647,14 +673,18 @@ export default function Home() {
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-yellow-400">Contacto</h3>
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Email: contacto@santorequest.com</p>
-                <p className="text-sm text-muted-foreground">Teléfono: +54 11 5606-2690</p>
+                <p className="text-sm text-muted-foreground">
+                  Email: <a href="mailto:contacto@santorequest.com" className="hover:text-yellow-400 transition-colors">contacto@santorequest.com</a>
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Teléfono: <a href="tel:+541156062690" className="hover:text-yellow-400 transition-colors">+54 11 5606-2690</a>
+                </p>
               </div>
               <div className="flex space-x-4 pt-2">
-                <Link href="#" className="text-muted-foreground hover:text-yellow-400">
+                <Link href="/privacidad" className="text-muted-foreground hover:text-yellow-400">
                   Políticas de Privacidad
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-yellow-400">
+                <Link href="/terminos" className="text-muted-foreground hover:text-yellow-400">
                   Términos de Servicio
                 </Link>
               </div>
